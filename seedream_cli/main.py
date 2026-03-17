@@ -12,8 +12,8 @@ import click
 from dotenv import load_dotenv
 
 from seedream_cli.commands.image import edit, generate
+from seedream_cli.commands.info import config, models, resolutions
 from seedream_cli.commands.task import task, tasks_batch, wait
-from seedream_cli.commands.info import models, config, resolutions
 
 load_dotenv()
 

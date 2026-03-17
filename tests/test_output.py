@@ -2,6 +2,7 @@
 
 from seedream_cli.core.output import (
     DEFAULT_MODEL,
+    RESOLUTIONS,
     SEEDREAM_MODELS,
     print_error,
     print_image_result,
@@ -9,7 +10,6 @@ from seedream_cli.core.output import (
     print_models,
     print_success,
     print_task_result,
-    RESOLUTIONS,
 )
 
 
@@ -23,7 +23,12 @@ class TestConstants:
         assert DEFAULT_MODEL in SEEDREAM_MODELS
 
     def test_models_include_all(self):
-        for model in ['doubao-seedream-4-5-251128', 'doubao-seedream-4-0-250828', 'doubao-seedream-3-0-t2i-250415', 'doubao-seededit-3-0-i2i-250628']:
+        for model in [
+            "doubao-seedream-4-5-251128",
+            "doubao-seedream-4-0-250828",
+            "doubao-seedream-3-0-t2i-250415",
+            "doubao-seededit-3-0-i2i-250628",
+        ]:
             assert model in SEEDREAM_MODELS
 
     def test_resolutions(self):

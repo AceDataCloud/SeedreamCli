@@ -22,7 +22,9 @@ class Settings:
         default_factory=lambda: float(os.environ.get("SEEDREAM_REQUEST_TIMEOUT", "1800"))
     )
     default_model: str = field(
-        default_factory=lambda: os.environ.get("SEEDREAM_DEFAULT_MODEL", "doubao-seedream-4-0-250828")
+        default_factory=lambda: os.environ.get(
+            "SEEDREAM_DEFAULT_MODEL", "doubao-seedream-4-0-250828"
+        )
     )
 
     @property

@@ -75,7 +75,15 @@ class TestGenerateCommands:
         )
         result = runner.invoke(
             cli,
-            ["--token", "test-token", "generate", "test", "-m", "doubao-seedream-4-5-251128", "--json"],
+            [
+                "--token",
+                "test-token",
+                "generate",
+                "test",
+                "-m",
+                "doubao-seedream-4-5-251128",
+                "--json",
+            ],
         )
         assert result.exit_code == 0
 
@@ -101,7 +109,6 @@ class TestGenerateCommands:
     def test_generate_no_token(self, runner):
         result = runner.invoke(cli, ["--token", "", "generate", "test"])
         assert result.exit_code != 0
-
 
     @respx.mock
     def test_edit_json(self, runner, mock_image_response):
@@ -144,7 +151,6 @@ class TestGenerateCommands:
             ],
         )
         assert result.exit_code == 0
-
 
 
 # ─── Task Commands ─────────────────────────────────────────────────────────

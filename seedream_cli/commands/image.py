@@ -5,7 +5,12 @@ import click
 from seedream_cli.core.client import get_client
 from seedream_cli.core.exceptions import SeedreamError
 from seedream_cli.core.output import (
-    SEEDREAM_MODELS, DEFAULT_MODEL, print_error, print_json, print_image_result, RESOLUTIONS, DEFAULT_RESOLUTION,
+    DEFAULT_MODEL,
+    RESOLUTIONS,
+    SEEDREAM_MODELS,
+    print_error,
+    print_image_result,
+    print_json,
 )
 
 
@@ -120,4 +125,3 @@ def edit(
     except SeedreamError as e:
         print_error(e.message)
         raise SystemExit(1) from e
-
