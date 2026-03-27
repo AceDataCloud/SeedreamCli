@@ -32,7 +32,7 @@ class TestConstants:
             assert model in SEEDREAM_MODELS
 
     def test_resolutions(self):
-        assert len(RESOLUTIONS) == 3
+        assert len(RESOLUTIONS) == 4
 
 
 class TestPrintJson:
