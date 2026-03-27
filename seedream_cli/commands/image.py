@@ -59,7 +59,7 @@ def generate(
             "callback_url": callback_url,
         }
         if resolution:
-            payload["resolution"] = resolution
+            payload["size"] = resolution
 
         result = client.generate_image(**payload)  # type: ignore[arg-type]
         if output_json:
