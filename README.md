@@ -186,15 +186,15 @@ SeedreamCli/
 └── README.md
 ```
 
-## Seedream CLI vs MCP Seedream
+## Seedream CLI vs Seedream MCP
 
-| Feature | Seedream CLI | MCP Seedream |
+| Feature | Seedream CLI | Seedream MCP |
 |---------|-----------|-----------|
 | Interface | Terminal commands | MCP protocol |
 | Usage | Direct shell, scripts, CI/CD | Claude, VS Code, MCP clients |
 | Output | Rich tables / JSON | Structured MCP responses |
 | Automation | Shell scripts, piping | AI agent workflows |
-| Install | `pip install seedream-cli` | `pip install mcp-seedream` |
+| Install | `pip install seedream-cli` | `pip install mcp-seedream-pro` |
 
 Both tools use the same AceDataCloud API and share the same API token.
 
