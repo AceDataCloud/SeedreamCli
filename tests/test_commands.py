@@ -111,6 +111,84 @@ class TestGenerateCommands:
         assert result.exit_code != 0
 
     @respx.mock
+    def test_generate_with_seed(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--seed", "42", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["seed"] == 42
+
+    @respx.mock
+    def test_generate_with_guidance_scale(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--guidance-scale", "3.5", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["guidance_scale"] == 3.5
+
+    @respx.mock
+    def test_generate_with_watermark_disabled(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--no-watermark", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["watermark"] is False
+
+    @respx.mock
+    def test_generate_with_response_format(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--response-format", "b64_json", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["response_format"] == "b64_json"
+
+    @respx.mock
+    def test_generate_with_sequential_image_generation(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--sequential-image-generation", "auto", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["sequential_image_generation"] == "auto"
+
+    @respx.mock
+    def test_generate_with_stream(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--stream", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["stream"] is True
+
+    @respx.mock
     def test_edit_json(self, runner, mock_image_response):
         respx.post("https://api.acedata.cloud/seedream/images").mock(
             return_value=Response(200, json=mock_image_response)
@@ -151,6 +229,57 @@ class TestGenerateCommands:
             ],
         )
         assert result.exit_code == 0
+
+    @respx.mock
+    def test_edit_uses_image_key(self, runner, mock_image_response):
+        """Verify edit command sends 'image' (not 'image_urls') and no 'action' field."""
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            [
+                "--token",
+                "test-token",
+                "edit",
+                "Make it blue",
+                "-i",
+                "https://example.com/photo.jpg",
+                "--json",
+            ],
+        )
+        assert result.exit_code == 0
+        body = json.loads(route.calls[0].request.content)
+        assert "image" in body
+        assert body["image"] == ["https://example.com/photo.jpg"]
+        assert "image_urls" not in body
+        assert "action" not in body
+
+    @respx.mock
+    def test_edit_with_seed_and_guidance(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            [
+                "--token",
+                "test-token",
+                "edit",
+                "Make it blue",
+                "-i",
+                "https://example.com/photo.jpg",
+                "--seed",
+                "123",
+                "--guidance-scale",
+                "5.5",
+                "--json",
+            ],
+        )
+        assert result.exit_code == 0
+        body = json.loads(route.calls[0].request.content)
+        assert body["seed"] == 123
+        assert body["guidance_scale"] == 5.5
 
 
 # ─── Task Commands ─────────────────────────────────────────────────────────
