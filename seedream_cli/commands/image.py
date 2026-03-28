@@ -30,6 +30,22 @@ from seedream_cli.core.output import (
     default=None,
     help="Output resolution.",
 )
+@click.option("--seed", type=int, default=None, help="Seed for reproducible generation (range: -1 to 2147483647).")
+@click.option(
+    "--sequential-image-generation",
+    type=click.Choice(["auto", "disabled"]),
+    default=None,
+    help="Sequential image generation mode (auto or disabled).",
+)
+@click.option("--stream", is_flag=True, default=False, help="Stream image generation progress.")
+@click.option("--guidance-scale", type=float, default=None, help="Prompt weight (range: 1-10).")
+@click.option(
+    "--response-format",
+    type=str,
+    default=None,
+    help="Response format: url (default) or b64_json.",
+)
+@click.option("--watermark/--no-watermark", default=None, help="Add AI-generated watermark (default: true).")
 @click.option("--callback-url", default=None, help="Webhook callback URL.")
 @click.option("--json", "output_json", is_flag=True, help="Output raw JSON.")
 @click.pass_context
@@ -38,6 +54,12 @@ def generate(
     prompt: str,
     model: str,
     resolution: str | None,
+    seed: int | None,
+    sequential_image_generation: str | None,
+    stream: bool,
+    guidance_scale: float | None,
+    response_format: str | None,
+    watermark: bool | None,
     callback_url: str | None,
     output_json: bool,
 ) -> None:
@@ -56,6 +78,12 @@ def generate(
         payload: dict[str, object] = {
             "prompt": prompt,
             "model": model,
+            "seed": seed,
+            "sequential_image_generation": sequential_image_generation,
+            "stream": stream if stream else None,
+            "guidance_scale": guidance_scale,
+            "response_format": response_format,
+            "watermark": watermark,
             "callback_url": callback_url,
         }
         if resolution:
@@ -88,6 +116,15 @@ def generate(
     default=DEFAULT_MODEL,
     help="Seedream model version.",
 )
+@click.option("--seed", type=int, default=None, help="Seed for reproducible generation (range: -1 to 2147483647).")
+@click.option("--guidance-scale", type=float, default=None, help="Prompt weight (range: 1-10).")
+@click.option(
+    "--response-format",
+    type=str,
+    default=None,
+    help="Response format: url (default) or b64_json.",
+)
+@click.option("--watermark/--no-watermark", default=None, help="Add AI-generated watermark (default: true).")
 @click.option("--callback-url", default=None, help="Webhook callback URL.")
 @click.option("--json", "output_json", is_flag=True, help="Output raw JSON.")
 @click.pass_context
@@ -96,6 +133,10 @@ def edit(
     prompt: str,
     image_urls: tuple[str, ...],
     model: str,
+    seed: int | None,
+    guidance_scale: float | None,
+    response_format: str | None,
+    watermark: bool | None,
     callback_url: str | None,
     output_json: bool,
 ) -> None:
@@ -112,10 +153,13 @@ def edit(
     client = get_client(ctx.obj.get("token"))
     try:
         result = client.edit_image(
-            action="edit",
             prompt=prompt,
-            image_urls=list(image_urls),
+            image=list(image_urls),
             model=model,
+            seed=seed,
+            guidance_scale=guidance_scale,
+            response_format=response_format,
+            watermark=watermark,
             callback_url=callback_url,
         )
         if output_json:
