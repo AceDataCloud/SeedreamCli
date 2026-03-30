@@ -46,6 +46,18 @@ from seedream_cli.core.output import (
     help="Response format: url (default) or b64_json.",
 )
 @click.option("--watermark/--no-watermark", default=None, help="Add AI-generated watermark (default: true).")
+@click.option(
+    "--output-format",
+    type=click.Choice(["jpeg", "png"]),
+    default=None,
+    help="Output image file format: jpeg (default) or png. Only supported for doubao-seedream-5-0-260128.",
+)
+@click.option(
+    "--web-search",
+    is_flag=True,
+    default=False,
+    help="Enable web search tool. Only supported for doubao-seedream-5-0-260128.",
+)
 @click.option("--callback-url", default=None, help="Webhook callback URL.")
 @click.option("--json", "output_json", is_flag=True, help="Output raw JSON.")
 @click.pass_context
@@ -60,6 +72,8 @@ def generate(
     guidance_scale: float | None,
     response_format: str | None,
     watermark: bool | None,
+    output_format: str | None,
+    web_search: bool,
     callback_url: str | None,
     output_json: bool,
 ) -> None:
@@ -84,6 +98,8 @@ def generate(
             "guidance_scale": guidance_scale,
             "response_format": response_format,
             "watermark": watermark,
+            "output_format": output_format,
+            "tools": [{"type": "web_search"}] if web_search else None,
             "callback_url": callback_url,
         }
         if resolution:

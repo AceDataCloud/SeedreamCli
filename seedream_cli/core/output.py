@@ -11,18 +11,20 @@ console = Console()
 
 # Available models
 SEEDREAM_MODELS = [
+    "doubao-seedream-5-0-260128",
     "doubao-seedream-4-5-251128",
     "doubao-seedream-4-0-250828",
     "doubao-seedream-3-0-t2i-250415",
     "doubao-seededit-3-0-i2i-250628",
 ]
 
-DEFAULT_MODEL = "doubao-seedream-4-0-250828"
+DEFAULT_MODEL = "doubao-seedream-5-0-260128"
 
 # Available resolutions
 RESOLUTIONS = [
     "1K",
     "2K",
+    "3K",
     "4K",
     "adaptive",
 ]
@@ -117,6 +119,11 @@ def print_models() -> None:
     table.add_column("Notes")
 
     table.add_row(
+        "doubao-seedream-5-0-260128",
+        "V5.0",
+        "Latest model (default)",
+    )
+    table.add_row(
         "doubao-seedream-4-5-251128",
         "V4.5",
         "Flagship model, best quality",
@@ -124,7 +131,7 @@ def print_models() -> None:
     table.add_row(
         "doubao-seedream-4-0-250828",
         "V4.0",
-        "Standard quality (default)",
+        "Standard quality",
     )
     table.add_row(
         "doubao-seedream-3-0-t2i-250415",

@@ -189,6 +189,33 @@ class TestGenerateCommands:
         assert json.loads(route.calls[0].request.content)["stream"] is True
 
     @respx.mock
+    def test_generate_with_output_format(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--output-format", "png", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        assert json.loads(route.calls[0].request.content)["output_format"] == "png"
+
+    @respx.mock
+    def test_generate_with_web_search(self, runner, mock_image_response):
+        route = respx.post("https://api.acedata.cloud/seedream/images").mock(
+            return_value=Response(200, json=mock_image_response)
+        )
+        result = runner.invoke(
+            cli,
+            ["--token", "test-token", "generate", "test", "--web-search", "--json"],
+        )
+        assert result.exit_code == 0
+        assert route.called
+        body = json.loads(route.calls[0].request.content)
+        assert body["tools"] == [{"type": "web_search"}]
+
+    @respx.mock
     def test_edit_json(self, runner, mock_image_response):
         respx.post("https://api.acedata.cloud/seedream/images").mock(
             return_value=Response(200, json=mock_image_response)
